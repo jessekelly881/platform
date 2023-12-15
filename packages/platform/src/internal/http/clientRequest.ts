@@ -2,6 +2,7 @@ import type * as Schema from "@effect/schema/Schema"
 import * as Effect from "effect/Effect"
 import { dual } from "effect/Function"
 import { pipeArguments } from "effect/Pipeable"
+import * as Secret from "effect/Secret"
 import type * as Stream from "effect/Stream"
 import type * as PlatformError from "../../Error.js"
 import type * as FileSystem from "../../FileSystem.js"
@@ -139,9 +140,20 @@ export const setHeaders = dual<
 
 /** @internal */
 export const basicAuth = dual<
-  (username: string, password: string) => (self: ClientRequest.ClientRequest) => ClientRequest.ClientRequest,
-  (self: ClientRequest.ClientRequest, username: string, password: string) => ClientRequest.ClientRequest
->(3, (self, username, password) => setHeader(self, "Authorization", `Basic ${btoa(`${username}:${password}`)}`))
+  (
+    username: string,
+    password: string | Secret.Secret
+  ) => (self: ClientRequest.ClientRequest) => ClientRequest.ClientRequest,
+  (self: ClientRequest.ClientRequest, username: string, password: string | Secret.Secret) => ClientRequest.ClientRequest
+>(
+  3,
+  (self, username, password) =>
+    setHeader(
+      self,
+      "Authorization",
+      `Basic ${btoa(`${username}:${Secret.isSecret(password) ? Secret.value(password) : password}`)}`
+    )
+)
 
 /** @internal */
 export const bearerToken = dual<

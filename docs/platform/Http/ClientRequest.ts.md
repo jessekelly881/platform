@@ -128,8 +128,8 @@ Added in v1.0.0
 
 ```ts
 export declare const basicAuth: {
-  (username: string, password: string): (self: ClientRequest) => ClientRequest
-  (self: ClientRequest, username: string, password: string): ClientRequest
+  (username: string, password: string | Secret): (self: ClientRequest) => ClientRequest
+  (self: ClientRequest, username: string, password: string | Secret): ClientRequest
 }
 ```
 

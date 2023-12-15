@@ -4,6 +4,7 @@
 import type * as Schema from "@effect/schema/Schema"
 import type * as Effect from "effect/Effect"
 import type { Pipeable } from "effect/Pipeable"
+import type { Secret } from "effect/Secret"
 import type * as Stream from "effect/Stream"
 import type * as PlatformError from "../Error.js"
 import type * as FileSystem from "../FileSystem.js"
@@ -164,8 +165,8 @@ export const setHeaders: {
  * @category combinators
  */
 export const basicAuth: {
-  (username: string, password: string): (self: ClientRequest) => ClientRequest
-  (self: ClientRequest, username: string, password: string): ClientRequest
+  (username: string, password: string | Secret): (self: ClientRequest) => ClientRequest
+  (self: ClientRequest, username: string, password: string | Secret): ClientRequest
 } = internal.basicAuth
 
 /**
